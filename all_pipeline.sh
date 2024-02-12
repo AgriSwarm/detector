@@ -1,2 +1,2 @@
-sh convert_coco.sh
+bash convert_coco.sh
 python train.py
