@@ -282,7 +282,8 @@ def convert_coco(
                 if box[2] <= 0 or box[3] <= 0:  # if w <= 0 and h <= 0
                     continue
 
-                cls = coco80[ann["category_id"] - 1] if cls91to80 else ann["category_id"] - 1  # class
+                # cls = coco80[ann["category_id"] - 1] if cls91to80 else ann["category_id"] - 1  # class
+                cls = 0
                 box = [cls] + box.tolist()
                 if box not in bboxes:
                     bboxes.append(box)
@@ -303,6 +304,7 @@ def convert_coco(
                             box + (np.array(ann["keypoints"]).reshape(-1, 3) / np.array([w, h, 1])).reshape(-1).tolist()
                         )
 
+            # print(bboxes)
             # Write
             with open((fn / f).with_suffix(".txt"), "a") as file:
                 for i in range(len(bboxes)):

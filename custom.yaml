@@ -1,0 +1,7 @@
+path: ../ultralytics/workspace/coco_converted
+train: '../coco_converted'
+val: '../coco_converted'
+ 
+# class names
+names: 
+  0: 'kiwi'
