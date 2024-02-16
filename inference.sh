@@ -1,4 +1,5 @@
 #!/bin/bash
+cd workspace
 
 # Check if an argument is given (image file path)
 if [ "$#" -ne 1 ]; then
@@ -24,4 +25,4 @@ if [ -z "$ckpt" ]; then
 fi
 
 # Run the inference script
-python inference.py "$image_path" --checkpoint "$ckpt"
+python inference.py "$image_path" --checkpoint "$ckpt" --save_path=results.json
