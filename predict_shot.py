@@ -2,7 +2,10 @@ import subprocess
 import json
 import sys
 import os
-import time
+import random
+import string
+import shutil
+from pathlib import Path
 
 def find_docker_container(container_name, call_count=0):
     try:
@@ -20,30 +23,36 @@ def find_docker_container(container_name, call_count=0):
     else:
         return None
 
-def run_inference_in_docker(container_id, image_path):
+def run_inference_in_docker(container_id, image_path, result_path):
     try:
-        subprocess.check_call(["docker", "exec", container_id, "sh", "workspace/inference.sh", image_path])
+        subprocess.check_call(["docker", "exec", container_id, "sh", "workspace/inference.sh", image_path, result_path])
     except subprocess.CalledProcessError:
         print("Error running inference script in Docker")
 
 def read_results(file_path):
     if not os.path.exists(file_path):
         print(f"Results file not found: {file_path}")
-        sys.exit(1)
+        return None
 
     with open(file_path, 'r') as file:
-        return json.load(file)
+        data = json.load(file)
+    os.remove(file_path)
+    return data
 
 def predict(image_path):
+    random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
     container_name = "mito_detector"  
-    results_file_path = "results.json"  
+    results_file_path = f"results_{random_string}.json"
 
     container_id = find_docker_container(container_name)
     if not container_id:
         print("Docker container not found.")
         sys.exit(1)
 
-    run_inference_in_docker(container_id, image_path)
+    # copy image_path to ./workspace not using docker
+    dest = "target" + Path(image_path).suffix
+    shutil.copy(image_path, dest)
+    run_inference_in_docker(container_id, dest, results_file_path)
     results = read_results(results_file_path)
     return results
 

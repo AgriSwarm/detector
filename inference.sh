@@ -1,13 +1,14 @@
 #!/bin/bash
 cd workspace
 
-# Check if an argument is given (image file path)
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 image_path"
+# Check if two arguments are given (image file path and save path)
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 image_path save_path"
     exit 1
 fi
 
 image_path=$1
+save_path=$2
 
 # Check if the image file exists
 if [ ! -f "$image_path" ]; then
@@ -25,4 +26,4 @@ if [ -z "$ckpt" ]; then
 fi
 
 # Run the inference script
-python inference.py "$image_path" --checkpoint "$ckpt" --save_path=results.json
+python inference.py "$image_path" --checkpoint "$ckpt" --save_path="$save_path"
