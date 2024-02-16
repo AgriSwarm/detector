@@ -1,7 +1,9 @@
 path: ../ultralytics/workspace/coco_converted
-train: '../coco_converted'
-val: '../coco_converted'
- 
+train: '../coco_converted/train'
+val: '../coco_converted/val'
+#val: '../coco_converted/train'
+
+auto_augment: 'randaugment' 
 # class names
 names: 
   0: 'kiwi'
