@@ -6,7 +6,7 @@
 
 下記のように`predict(...)`を呼ぶことで推論できます．
 
-```
+```python
 import json
 from predict_shot import predict
 
