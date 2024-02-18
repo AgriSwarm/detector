@@ -10,7 +10,9 @@
 import json
 from predict_shot import predict
 
-results = predict("coco_converted/val/images/000056.jpg")
+with open("coco_converted/val/images/000056.jpg", 'rb') as file:
+    image = file.read()
+    results = predict(image)
 print(json.dumps(results,indent=4))
 ```
 
