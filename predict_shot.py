@@ -5,6 +5,7 @@ import os
 import random
 import string
 import shutil
+import requests
 from pathlib import Path
 
 def find_docker_container(container_name, call_count=0):
@@ -23,23 +24,16 @@ def find_docker_container(container_name, call_count=0):
     else:
         return None
 
-def run_inference_in_docker(container_id, image_path, result_path):
-    try:
-        subprocess.check_call(["docker", "exec", container_id, "sh", "workspace/inference.sh", image_path, result_path])
-    except subprocess.CalledProcessError:
-        print("Error running inference script in Docker")
-
-def read_results(file_path):
-    if not os.path.exists(file_path):
-        print(f"Results file not found: {file_path}")
+def inference(image):
+    url = "http://localhost:3100/predict/"
+    response = requests.post(url, files={"file": ("tmp.jpg", image, "image/jpeg")})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to get a response, status code: {response.status_code}")
         return None
 
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    os.remove(file_path)
-    return data
-
-def predict(image_path):
+def predict(image):
     random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
     container_name = "mito_detector"  
     results_file_path = f"results_{random_string}.json"
@@ -50,10 +44,8 @@ def predict(image_path):
         sys.exit(1)
 
     # copy image_path to ./workspace not using docker
-    dest = "target" + Path(image_path).suffix
-    shutil.copy(image_path, dest)
-    run_inference_in_docker(container_id, dest, results_file_path)
-    results = read_results(results_file_path)
+    # run_server_in_docker(container_id)
+    results = inference(image)
     return results
 
 # debug
@@ -63,5 +55,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     image_path = sys.argv[1]
-    results = predict(image_path)
+    with open(image_path, 'rb') as file:
+        image = file.read()
+        results = predict(image)
     print("DEBUG:",results)

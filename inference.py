@@ -1,18 +1,40 @@
 import argparse
 import json
+import sys
+import cv2
+import numpy as np
 from ultralytics import YOLO
 
-def main():
-    parser = argparse.ArgumentParser(description='Run YOLO model inference.')
-    parser.add_argument('target', type=str, help='Target file for inference.')
-    parser.add_argument('--save_path', type=str, required=True, help='Path to save the results.')
-    parser.add_argument('--checkpoint', type=str, required=True, help='Path to the model checkpoint.')
-    parser.add_argument('--conf', type=float, default=0.3, help='Confidence threshold for predictions.')
+from fastapi.responses import JSONResponse
+from fastapi import FastAPI, File, UploadFile
+from ultralytics import YOLO
+import cv2
+import numpy as np
+import json
 
-    args = parser.parse_args()
+app = FastAPI()
+args, model = None, None
+
+@app.post("/predict/")
+async def create_upload_file(file: UploadFile = File(...)):
+    contents = await file.read()
+    nparr = np.frombuffer(contents, np.uint8)
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    if image is None:
+        return {"error": "Invalid image"}
+
+    results = predict(args,image)
+    return results
+
+
+def predict(args, image):
+    if image is None:
+        print("Error loading image")
+        return {"error": "Invalid image"}
 
     model = YOLO(args.checkpoint)
-    res = model.predict(args.target, save=True, conf=args.conf)
+    res = model.predict(image, save=True, conf=args.conf)
     assert len(res) == 1
     res = res[0]
     
@@ -25,7 +47,15 @@ def main():
             "bbox_xyxy": postprocess(bbox),
             "conf": postprocess(conf)
         })
-    json.dump(outputs, open(args.save_path,"w"), indent=4)
+    
+    return JSONResponse(content=json.dumps(outputs, indent=4))
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    import uvicorn
+    parser = argparse.ArgumentParser(description='Run YOLO model inference.')
+    parser.add_argument('--checkpoint', type=str, required=True, help='Path to the model checkpoint.')
+    parser.add_argument('--conf', type=float, default=0.3, help='Confidence threshold for predictions.')
+
+    args = parser.parse_args()
+    model = YOLO(args.checkpoint)
+    uvicorn.run(app, host="0.0.0.0", port=3100)
