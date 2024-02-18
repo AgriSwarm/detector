@@ -28,7 +28,7 @@ def inference(image):
     url = "http://localhost:3100/predict/"
     response = requests.post(url, files={"file": ("tmp.jpg", image, "image/jpeg")})
     if response.status_code == 200:
-        return response.json()
+        return json.loads(response.json())
     else:
         print(f"Failed to get a response, status code: {response.status_code}")
         return None
