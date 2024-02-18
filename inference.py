@@ -33,7 +33,6 @@ def predict(args, image):
         print("Error loading image")
         return {"error": "Invalid image"}
 
-    model = YOLO(args.checkpoint)
     res = model.predict(image, save=True, conf=args.conf)
     assert len(res) == 1
     res = res[0]
