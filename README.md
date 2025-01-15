@@ -1,10 +1,10 @@
-# detector
+# Detector
 
 ## Usage
 
 ### Python
 
-下記のように`predict(...)`を呼ぶことで推論できます．
+Perform inference effortlessly by calling `predict(...)` as demonstrated below:
 
 ```python
 import json
@@ -13,8 +13,10 @@ from predict_shot import predict
 with open("coco_converted/val/images/000056.jpg", 'rb') as file:
     image = file.read()
     results = predict(image)
-print(json.dumps(results,indent=4))
+print(json.dumps(results, indent=4))
 ```
+
+Sample output:
 
 ```bash
 [
@@ -31,22 +33,32 @@ print(json.dumps(results,indent=4))
 ]
 ```
 
-![target](https://github.com/AgriSwarm/detector/assets/51681991/f27ff1e6-ffa7-4c92-8212-48e3ab75c2cb)
+![image0](https://github.com/user-attachments/assets/c816a02b-db79-443a-a63f-6e27b9ade279)
 
-### CLI
-```
+
+### Command Line Interface (CLI)
+
+Run inference directly from the command line:
+
+```bash
 python predict_shot.py coco_converted/val/images/000056.jpg
 ```
-### Dockerコンテナを自分で立ち上げる必要がある場合
 
-下記コマンドを実行してください．
+### Setting Up the Docker Container
+
+If you need to launch your own Docker container, simply execute the following command:
 
 ```bash
 bash run_docker.sh
 ```
 
-## For ML engineer
+## For Machine Learning Engineers
+
+Streamline your workflow with the full pipeline:
+
 ```bash
 bash run_docker.sh
 bash all_pipeline.sh
 ```
+
+Elevate your ML tasks with these simple, yet powerful commands!
