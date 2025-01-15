@@ -1,5 +1,8 @@
 # Detector
 
+![image](https://github.com/user-attachments/assets/f3bf9b3d-9ca8-4676-8aeb-fcb60796dd1f)
+
+
 ## Usage
 
 ### Python
@@ -34,6 +37,7 @@ Sample output:
 ```
 
 ![image0](https://github.com/user-attachments/assets/c816a02b-db79-443a-a63f-6e27b9ade279)
+
 
 
 ### Command Line Interface (CLI)
