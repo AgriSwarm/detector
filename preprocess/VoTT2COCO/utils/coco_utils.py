@@ -35,6 +35,7 @@ class COCOSaver:
         for item in tqdm(self.reader.items):
             self.coco['images'].append(self.__create_image(item.index, item.width, item.height, item.name))
             copyfile(item.image_path, f'{str(img_path)}/{item.name}')
+            print(item.image_path, f'{str(img_path)}/{item.name}')
 
             self.coco['annotations'] += self.__create_annotations(item.index, item.bbox, item.masks, item.areas, item.categories)
 

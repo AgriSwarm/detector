@@ -29,7 +29,7 @@ mkdir -p coco_converted/val/labels
 
 # PNG画像を指定ディレクトリにコピー
 colored_echo "Copying PNG images..."
-cp ./preprocess/data/coco/images/*.png coco_converted/images
+cp ./preprocess/data/coco/images/*.jpg coco_converted/images
 
 # 必要に応じてアノテーションファイルをlabelsにコピー（例として）
 # cp ./preprocess/data/coco/labels/*.txt coco_converted/labels/annotations

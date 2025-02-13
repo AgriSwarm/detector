@@ -1,10 +1,10 @@
 dataset:
   source:
-    path: '/home/initial/workspace/misc/mt/ultralytics/preprocess/vott'
+    path: '/home/initial/workspace/misc/mt/ultralytics/additional/raw'
     img_cat: images
     anno_cat: annotations
   destination:
-    path: '/home/initial/workspace/misc/mt/ultralytics/preprocess/coco'
+    path: '/home/initial/workspace/misc/mt/ultralytics/additional/vott'
     img_cat: images
     anno_file: annotations.json
 
